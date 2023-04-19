@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:ox_game/values/values.dart';
+
+import '../constants/values.dart';
 
 class Box extends StatefulWidget {
-  VoidCallback? onTap;
-  Image? childImage;
-  Box({this.onTap, this.childImage});
+  VoidCallback onTap;
+  int boxNumber;
+  Box({required this.onTap,required this.boxNumber});
   @override
   State<StatefulWidget> createState() => BoxState();
 }
@@ -17,18 +18,27 @@ class BoxState extends State<Box> {
       child: InkWell(
         onTap: widget.onTap,
 
-        child: Container(
+
+        child: (Values.boxDetail[widget.boxNumber]=="0") ? Container(
           height: Values.boxHeight,
           width: Values.boxWidth,
           decoration: BoxDecoration(
             color: Values.boxColor,
             borderRadius: BorderRadius.all(Radius.circular(10)),
           ),
-          child: widget.childImage,
-        ),
+        ) :
+        Container(
+          height: Values.boxHeight,
+          width: Values.boxWidth,
+          decoration: BoxDecoration(
+            color: Values.boxColor,
+            borderRadius: BorderRadius.all(Radius.circular(10)),
+          ),
+          child: Image.asset(Values.boxDetail[widget.boxNumber],color: Colors.indigo[100]),
+        )
       ),
     );
   }
 
-  onMove(turn) {}
+
 }

@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:ox_game/pages/game_room.dart';
-import 'package:ox_game/widgets/button.dart';
-
-import '../values/values.dart';
+import '../common/constants/values.dart';
+import '../common/widgets/button.dart';
 
 class PlayerDetail extends StatefulWidget {
   const PlayerDetail({Key? key}) : super(key: key);
@@ -32,7 +31,6 @@ class _PlayerDetailState extends State<PlayerDetail> {
               SizedBox(height: 10,),
               TextField(
                 controller: player2,
-
               ),
               SizedBox(height: 15,),
               Button(
@@ -47,9 +45,15 @@ class _PlayerDetailState extends State<PlayerDetail> {
                 });
                 Navigator.pushReplacement(
                     context,
-                    MaterialPageRoute(builder: (context)=>GameRoom())
+                    MaterialPageRoute(builder: (context)=>GameRoom(
+                      player1: player1.text.trim(),
+                      player2: player2.text.trim(),
+                    ))
                 );
-              }),
+              },
+                width: 80,
+                height: 50,
+              ),
 
             ],
           ),
