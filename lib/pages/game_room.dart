@@ -1,4 +1,7 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
+import 'package:ox_game/common/widgets/name_plate.dart';
 import 'package:ox_game/pages/player_detail.dart';
 import '../common/constants/values.dart';
 import '../common/widgets/box_design.dart';
@@ -15,6 +18,8 @@ class GameRoom extends StatefulWidget {
   initState(){
     Values.player1=player1 ;
     Values.player2=player2;
+    log(Values.turn);
+    log("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
   }
 }
 
@@ -90,6 +95,24 @@ class _GameRoomState extends State<GameRoom> {
                   Box(onTap: playerMove(8),boxNumber: 8),
                 ],
               ),
+
+              SizedBox(height: 100,),
+              //Players names
+
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    NamePlate(name: widget.player1,fontFamily: "ModernAAntiqua",fontSize: 20,fontColor: Colors.white),
+                    SizedBox(
+                      width: 50,
+                    ),
+                    NamePlate(name: widget.player2,fontFamily: "ModernAAntiqua",fontSize: 20,fontColor: Colors.white),
+                  ],
+                ),
+              )
+
             ],
           ),
         ) ,
@@ -97,18 +120,24 @@ class _GameRoomState extends State<GameRoom> {
     );
   }
 
+
+
+
    playerMove(int boxNumber){
     return Values.boxDetail[boxNumber]=="0" ? (){
       setState(() {
-        if(Values.turn==widget.player1){
-          Values.boxDetail[boxNumber]="assets/images/circle.png";
-          winCondition(circleImage);
-          Values.turn=widget.player2;
-        }else{
-          Values.boxDetail[boxNumber]="assets/images/cross.png";
-          winCondition(crossImage);
-          Values.turn=widget.player1;
+        if(Values.winner==null){
+          if(Values.turn==widget.player2){
+            Values.boxDetail[boxNumber]="assets/images/cross.png";
+            winCondition(crossImage);
+            Values.turn=widget.player1;
+          } else{
+            Values.boxDetail[boxNumber]="assets/images/circle.png";
+            winCondition(circleImage);
+            Values.turn=widget.player2;
+          }
         }
+
       });
     } :
 
@@ -123,29 +152,63 @@ class _GameRoomState extends State<GameRoom> {
         ( Values.boxDetail[3]==move && Values.boxDetail[4]==move && Values.boxDetail[5]==move ) ||
         ( Values.boxDetail[6]==move && Values.boxDetail[7]==move && Values.boxDetail[8]==move ) ||
         ( Values.boxDetail[0]==move && Values.boxDetail[3]==move && Values.boxDetail[6]==move ) ||
-        ( Values.boxDetail[1]==move && Values.boxDetail[4]==move && Values.boxDetail[5]==move ) ||
+        ( Values.boxDetail[1]==move && Values.boxDetail[4]==move && Values.boxDetail[7]==move ) ||
         ( Values.boxDetail[2]==move && Values.boxDetail[5]==move && Values.boxDetail[8]==move ) ||
         ( Values.boxDetail[0]==move && Values.boxDetail[4]==move && Values.boxDetail[8]==move ) ||
         ( Values.boxDetail[2]==move && Values.boxDetail[4]==move && Values.boxDetail[6]==move )
     ){
-
+      Values.winner= Values.turn;
       AlertDialog dialog=AlertDialog(
         backgroundColor: Values.bgColor,
-        title: Text("Winner!!",),
+        title: Center(
+            child: Text(
+              "Winner!!",
+              style: TextStyle(
+                  color: Colors.yellowAccent,
+                fontFamily: "LilitaOne"
+              ),
+            )),
         content: Wrap(
           children: [
-            Column(
-              children: [
-                Text(Values.turn,style: TextStyle(color: Colors.black),)
-              ],
+            Center(
+              child: Text(
+                Values.winner.toString(),
+                style: TextStyle(
+                    color: Colors.white,
+                    fontFamily: "ModernAntiqua-Regular.ttf"
+                ),),
             )
           ],
-        ),
+        )
+        ,
         actions: [
           Row(
+            mainAxisAlignment: MainAxisAlignment.end,
             children: [
-              Button(text: "Rematch", onPressed: (){}, buttonColor: Colors.blue, textColor: Values.blackText, width: 80,height: 50,),
-              Button(text: "New Game", onPressed: (){}, buttonColor: Colors.green, textColor: Values.blackText,width: 80,height: 50,),
+              Button(
+                text: "Rematch",
+                onPressed: (){
+
+                },
+                buttonColor: Colors.blue,
+                textColor: Values.blackText,
+                width: 80,
+                height: 50,
+              ),
+
+              Button(
+                text: "New Game",
+                onPressed: (){
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(builder: (context)=> PlayerDetail()),
+                  );
+                },
+                buttonColor: Colors.green,
+                textColor: Values.blackText,
+                width: 80,
+                height: 50,
+              ),
             ],
           )        ],
 
@@ -154,8 +217,9 @@ class _GameRoomState extends State<GameRoom> {
       return showDialog(
           barrierDismissible: false,
           context: context, builder: (BuildContext context){
-            return dialog;
+        return dialog;
       });
+
     }
    }
 

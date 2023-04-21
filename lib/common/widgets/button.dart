@@ -1,5 +1,7 @@
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' hide BoxDecoration, BoxShadow;
+import 'package:flutter_inset_box_shadow/flutter_inset_box_shadow.dart';
+
+
 
 class Button extends StatefulWidget {
   String text;
@@ -31,25 +33,60 @@ class Button extends StatefulWidget {
 }
 
 class _ButtonState extends State<Button> {
+
+  bool isPressed =false;
+
+
   @override
   Widget build(BuildContext context) {
-    return     InkWell(
-      onTap: widget.onPressed,
-      child: Container(
-        height: widget.height,
-        width: widget.width,
-        decoration: BoxDecoration(
-          color: widget.buttonColor,
-          borderRadius: BorderRadius.all(Radius.circular(widget.borderRadius ?? 17)),
-        ),
-        child: Center(
-            child: Text(
-              widget.text,
-              style:TextStyle(
-                fontFamily: widget.fontFamily,
-                fontWeight: widget.fontWeight,
-                fontSize: widget.fontSize,
-              ),)
+    double blurRadius= isPressed ? 0.5 : 5.0;
+    Offset distance =isPressed ? Offset(2, 2) : Offset(4, 4);
+
+    return     Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: InkWell(
+
+        onTap: widget.onPressed,
+
+        child: Listener(
+          //when we press
+          onPointerDown: (_)=>setState(() {isPressed=true;}),
+          //when we release
+          onPointerUp: (_)=>setState(() {isPressed=false;}),
+
+          child: AnimatedContainer(
+            duration: const Duration(milliseconds: 150),
+            height: widget.height,
+            width: widget.width,
+            decoration: BoxDecoration(
+                color: widget.buttonColor,
+                borderRadius: BorderRadius.all(Radius.circular(widget.borderRadius ?? 17)),
+                boxShadow: [
+                  BoxShadow(
+                    blurRadius: blurRadius,
+                    offset: -distance,
+                    color: Colors.indigo.shade800,
+                    inset :isPressed,
+                  ),
+                  BoxShadow(
+                    blurRadius: blurRadius,
+                    offset: distance,
+                    color: Colors.black87,
+                    inset : isPressed,
+                  ),
+                ]
+            ),
+
+            child: Center(
+                child: Text(
+                  widget.text,
+                  style:TextStyle(
+                    fontFamily: widget.fontFamily,
+                    fontWeight: widget.fontWeight,
+                    fontSize: widget.fontSize,
+                  ),)
+            ),
+          ),
         ),
       ),
     );

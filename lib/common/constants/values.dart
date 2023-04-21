@@ -5,6 +5,9 @@ import 'package:flutter/material.dart';
 class Values{
 
   static Color bgColor = Colors.indigo.shade900;
+  static Color bgColorL1 = Colors.indigo.shade400;
+  static Color bgColorL2 = Colors.indigo.shade200;
+  static Color bgColorL3 = Colors.indigo.shade50;
 
   //OX box
   static double boxHeight = 100;
@@ -17,7 +20,7 @@ class Values{
   static Color blackText = Colors.black;
 
   //Game and player
-  static String winner="";
+  static String? winner;
   static String player1="player1";
   static String player2="player2";
   static String turn=player1;
