@@ -12,56 +12,80 @@ class PlayerDetail extends StatefulWidget {
 
 class _PlayerDetailState extends State<PlayerDetail> {
 
-  var player1 =TextEditingController();
-  var player2=TextEditingController();
+  TextEditingController player1 =TextEditingController();
+  TextEditingController player2=TextEditingController();
 
- @override
-  void setState(VoidCallback fn) {
-   Values.boxDetail = [
-     "0","0","0",
-     "0","0","0",
-     "0","0","0",
-   ];
-   Values.winner=null;
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    Values.player1="player1";
+    Values.player2="player2";
+    Values.turn=Values.player1;
+
+    Values.boxDetail = [
+      "0","0","0",
+      "0","0","0",
+      "0","0","0",
+    ];
+    Values.winner=null;
+
   }
+
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Values.bgColor,
-      // appBar: AppBar(
-      //   title: Text("Players detail"),
-      // ),
       body: SafeArea(
         child: Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              TextField(
-                controller: player1,
+
+              Image(image: AssetImage(
+                  "assets/images/tictactoeLogo.png"
+              ),
+                height: 80,
+              ),
+
+              SizedBox(height: 40,),
+
+              Button(
+                isTextField: true,
+                textEditingController:player1,
               ),
               SizedBox(height: 15,),
-              TextField(
-                controller: player2,
+              Button(
+                isTextField: true,
+                textEditingController:player2,
               ),
               SizedBox(height: 40,),
               Button(
+                isTextField: false,
                   text: "Play",
                   buttonColor: Colors.white,
                   textColor: Values.blackText,
                   onPressed: (){
-                setState(() {
-                  Values.player1=player1.text.trim();
-                  Values.player2=player2.text.trim();
-                  Values.turn=Values.player1;
-                });
-                Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(builder: (context)=>GameRoom(
-                      player1: player1.text.trim(),
-                      player2: player2.text.trim(),
-                    ))
-                );
+                    Values.player1 = player1.text.trim() ?? "player1" ;
+                    Values.player2 = player2.text.trim() ?? "player2" ;
+                    Values.turn = Values.player1;
+
+
+                // Navigator.pushReplacement(
+                //     context,
+                //     MaterialPageRoute(builder: (context)=>GameRoom(
+                //       // player1: Values.player1,
+                //       // player2: Values.player2,
+                //     ))
+                // );
+                    Navigator.of(context).pushReplacement(
+                      PageRouteBuilder(
+                          pageBuilder: (context,aniation,_){
+                            return GameRoom();
+                          }
+
+                    ));
               },
                 width: 80,
                 height: 50,

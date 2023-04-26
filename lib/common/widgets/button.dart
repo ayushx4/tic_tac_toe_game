@@ -4,7 +4,10 @@ import 'package:flutter_inset_box_shadow/flutter_inset_box_shadow.dart';
 
 
 class Button extends StatefulWidget {
-  String text;
+
+  //this is use as button as well TextField
+
+  String? text;
   String? fontFamily;
   Color? buttonColor;
   Color? textColor;
@@ -13,11 +16,16 @@ class Button extends StatefulWidget {
   double? borderRadius;
   double? fontSize;
   FontWeight? fontWeight;
-  VoidCallback onPressed;
+  VoidCallback? onPressed;
+  bool isTextField;
+  TextEditingController? textEditingController;
+
 
   Button({super.key,
-    required this.text,
-    required this.onPressed,
+    required this.isTextField,
+    this.textEditingController,
+    this.text,
+    this.onPressed,
     this.buttonColor,
     this.textColor,
     this.width,
@@ -27,6 +35,7 @@ class Button extends StatefulWidget {
     this.fontWeight,
     this.fontSize
   });
+
 
   @override
   State<Button> createState() => _ButtonState();
@@ -77,9 +86,18 @@ class _ButtonState extends State<Button> {
                 ]
             ),
 
-            child: Center(
+            child: (widget.isTextField) ?
+            TextField(
+
+              decoration: InputDecoration(
+                hintText: "Enter player name"
+              ),
+              controller: widget.textEditingController,
+            ) :
+
+            Center(
                 child: Text(
-                  widget.text,
+                  widget.text!,
                   style:TextStyle(
                     fontFamily: widget.fontFamily,
                     fontWeight: widget.fontWeight,
@@ -95,3 +113,6 @@ class _ButtonState extends State<Button> {
 
   }
 }
+
+
+///////

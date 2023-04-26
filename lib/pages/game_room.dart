@@ -8,19 +8,13 @@ import '../common/widgets/box_design.dart';
 import '../common/widgets/button.dart';
 
 class GameRoom extends StatefulWidget {
-  String player1;
-  String player2;
-  GameRoom({required this.player1, required this.player2});
+  // String player1;
+  // String player2;
+  // GameRoom({required this.player1, required this.player2});
 
   @override
   State<GameRoom> createState() => _GameRoomState();
-  @override
-  initState(){
-    Values.player1=player1 ;
-    Values.player2=player2;
-    log(Values.turn);
-    log("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-  }
+
 }
 
 class _GameRoomState extends State<GameRoom> {
@@ -28,95 +22,23 @@ class _GameRoomState extends State<GameRoom> {
 
   String circleImage = "assets/images/circle.png";
   String crossImage = "assets/images/cross.png";
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    if(Values.player1=="") Values.player1="player1";
+    if(Values.player2=="") Values.player2="player2";
+  }
+
+
+
   @override
   Widget build(BuildContext context) {
 
 
     return Scaffold(
       backgroundColor: Values.bgColor,
-      body: SafeArea(
-        child:Center(
-          child: Column(
-            children: [
-              SizedBox(height: 30,),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 10),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    Button(
-                        text:"Quit" ,
-                        fontFamily: "SedgwickAveDisplay",
-                        fontSize: 19,
-                        textColor: Values.blackText,
-                        buttonColor: Values.redButton,
-                        onPressed:(){
-                          setState(() {
-                            Values.boxDetail = [
-                              "0","0","0",
-                              "0","0","0",
-                              "0","0","0",
-                            ];
-                          });
-                          Navigator.pushReplacement(
-                              context,
-                              MaterialPageRoute(builder: (context)=> PlayerDetail()),
-                          );
-                        },
-                      width: 80,
-                      height: 50,
-                    )
-                  ],
-                ),
-              ),
-
-              SizedBox(height: 150,),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Box(onTap: playerMove(0),boxNumber: 0,),
-                  Box(onTap: playerMove(1),boxNumber: 1),
-                  Box(onTap: playerMove(2),boxNumber: 2),
-                ],
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Box(onTap: playerMove(3),boxNumber: 3),
-                  Box(onTap: playerMove(4),boxNumber: 4),
-                  Box(onTap: playerMove(5),boxNumber: 5),
-                ],
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Box(onTap: playerMove(6),boxNumber: 6),
-                  Box(onTap: playerMove(7),boxNumber: 7),
-                  Box(onTap: playerMove(8),boxNumber: 8),
-                ],
-              ),
-
-              SizedBox(height: 100,),
-              //Players names
-
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    NamePlate(name: widget.player1,fontFamily: "ModernAAntiqua",fontSize: 20,fontColor: Colors.white),
-                    SizedBox(
-                      width: 50,
-                    ),
-                    NamePlate(name: widget.player2,fontFamily: "ModernAAntiqua",fontSize: 20,fontColor: Colors.white),
-                  ],
-                ),
-              )
-
-            ],
-          ),
-        ) ,
-      )
+      body:TweenAnimationBuilder()
     );
   }
 
@@ -127,14 +49,14 @@ class _GameRoomState extends State<GameRoom> {
     return Values.boxDetail[boxNumber]=="0" ? (){
       setState(() {
         if(Values.winner==null){
-          if(Values.turn==widget.player2){
+          if(Values.turn==Values.player2){
             Values.boxDetail[boxNumber]="assets/images/cross.png";
             winCondition(crossImage);
-            Values.turn=widget.player1;
+            Values.turn=Values.player1;
           } else{
             Values.boxDetail[boxNumber]="assets/images/circle.png";
             winCondition(circleImage);
-            Values.turn=widget.player2;
+            Values.turn=Values.player2;
           }
         }
 
@@ -186,10 +108,9 @@ class _GameRoomState extends State<GameRoom> {
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
               Button(
+                isTextField: false,
                 text: "Rematch",
-                onPressed: (){
-
-                },
+                onPressed: reMatch(),
                 buttonColor: Colors.blue,
                 textColor: Values.blackText,
                 width: 80,
@@ -197,13 +118,9 @@ class _GameRoomState extends State<GameRoom> {
               ),
 
               Button(
+                isTextField: false,
                 text: "New Game",
-                onPressed: (){
-                  Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(builder: (context)=> PlayerDetail()),
-                  );
-                },
+                onPressed: newGame(),
                 buttonColor: Colors.green,
                 textColor: Values.blackText,
                 width: 80,
@@ -222,6 +139,35 @@ class _GameRoomState extends State<GameRoom> {
 
     }
    }
+
+    VoidCallback newGame() {
+    return () {
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => PlayerDetail()),
+      );
+    };
+   }
+
+  VoidCallback reMatch() {
+    return () {
+      setState(() {
+
+        Values.turn=Values.player1;
+        Values.winner=null;
+
+        Values.boxDetail = [
+          "0","0","0",
+          "0","0","0",
+          "0","0","0",
+        ];
+
+        Navigator.pop(context);
+      });
+    };
+  }
+
+
 
 }
 

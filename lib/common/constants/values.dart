@@ -19,10 +19,13 @@ class Values{
   static Color blueButton = Colors.blue;
   static Color blackText = Colors.black;
 
+  //name_input
+  // static Color
+
   //Game and player
   static String? winner;
-  static String player1="player1";
-  static String player2="player2";
+  static String player1 = "player1";
+  static String player2 = "player2";
   static String turn=player1;
   static var moves = [
     0,0,0,
